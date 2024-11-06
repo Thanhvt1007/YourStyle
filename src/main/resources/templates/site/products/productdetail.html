@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{site/index.html}">
+
+<head>
+    <style>
+        .price-discount {
+            font-size: 1.5em;
+            /* Tăng kích thước cho giá đã giảm */
+            color: #dc3545;
+            /* Màu đỏ */
+        }
+
+        .price-original {
+            font-size: 1em;
+            /* Kích thước nhỏ hơn cho giá gốc */
+            color: #6c757d;
+            /* Màu xám nhạt */
+            text-decoration: line-through;
+            /* Gạch ngang */
+        }
+
+        .price-similar-product,
+        .price-product {
+            font-size: 1.5em;
+            color: #dc3545;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="py-5 container" layout:fragment="main">
+        <div class="row">
+            <!-- Phần ảnh sản phẩm -->
+            <div class="col-md-1 border-end border-top">
+                <div class="product-thumbnails d-flex flex-column align-items-center mt-3">
+                    <div th:each="image : ${productImages}" class="thumbnail-item mb-3">
+                        <img th:src="@{/uploads/} + ${image.imageUrl}" class="img-thumbnail" alt="Product Thumbnail">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-7 border-bottom">
+                <div id="carouselExampleControls" class="carousel slide product-slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img th:src="@{/uploads/} + ${product.image}" class="d-block w-100" alt="...">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                <div class="pt-5">
+                    <hr>
+                    <h3>Đánh giá sản phẩm</h3>
+                    <div class="py-5">
+                        <form th:action="@{/product/review}" method="post">
+                            <div class="comment-box d-flex align-items-center p-2">
+                                <a href="">
+                                    <img src="/site/images/logo/github.png" alt="Logo" class="comment-logo">
+                                </a>
+                                <div class="form-outline" data-mdb-input-init>
+                                    <input type="text" id="form12" name="comment" class="form-control" required />
+                                    <label class="form-label" for="form12">ĐÁNH GIÁ</label>
+                                </div>
+                                <input type="hidden" name="productId" th:value="${product.productId}" />
+                                <button type="button" class="btn btn-outline-danger mx-2" data-mdb-ripple-init
+                                    data-mdb-ripple-color="dark">Hủy</button>
+                                <button type="submit" class="btn btn-outline-info" data-mdb-ripple-init
+                                    data-mdb-ripple-color="dark">Đăng</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <ul class="nav nav-tabs mb-3" id="ex1" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a data-mdb-tab-init class="nav-link active" id="ex1-tab-1" href="#ex1-tabs-1" role="tab"
+                                aria-controls="ex1-tabs-1" aria-selected="true">TẤT cẢ ĐÁNH GIÁ</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content pt-4" id="ex1-content">
+                        <div class="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel"
+                            aria-labelledby="ex1-tab-1">
+                            <div class="comment" th:each="review : ${reviewsPage.content}">
+                                <hr>
+                                <div class="comment-header d-flex align-items-center">
+                                    <img src="/site/images/logo/github.png" alt="Logo" class="comment-logo">
+                                    <span class="comment-name">CHIẾN ĐẸP TRAI</span>
+                                    <span class="comment-date ms-auto"
+                                        th:text="${#dates.format(review.createAt, 'dd/MM/yyyy')}">01/10/2024</span>
+                                </div>
+                                <div class="comment-body">
+                                    <h5 th:text="${review.comment}">Review Content</h5>
+                                    <img src="/site/images/product/product-3.webp" class="comment-image" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center py-3">
+                            <nav aria-label="Page navigation" th:if="${!reviewsPage.empty}">
+                                <ul class="pagination">
+                                    <li class="page-item" th:class="${!reviewsPage.hasPrevious()} ? 'disabled'">
+                                        <a class="page-link"
+                                            th:href="@{/product/detail/{productId}(productId=${product.productId}, page=${reviewsPage.number - 1})}"
+                                            aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item"
+                                        th:each="i : ${#numbers.sequence(0, reviewsPage.totalPages - 1)}"
+                                        th:class="${i == reviewsPage.number} ? 'active'">
+                                        <a class="page-link"
+                                            th:href="@{/product/detail/{productId}(productId=${product.productId}, page=${i})}"
+                                            th:text="${i + 1}">1</a>
+                                    </li>
+                                    <li class="page-item" th:class="${!reviewsPage.hasNext()} ? 'disabled'">
+                                        <a class="page-link"
+                                            th:href="@{/product/detail/{productId}(productId=${product.productId}, page=${reviewsPage.number + 1})}"
+                                            aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                            <div th:if="${reviewsPage.empty}" class="alert alert-info text-center">
+                                Không có đánh giá nào cho sản phẩm này.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thông tin sản phẩm -->
+            <div class="col-md-4 border-start border-top py-4">
+                <h4 class="product-title">[[${product.name}]]</h4>
+                <div class="rating">
+                    <span class="text-danger">
+                        <i class="fa fa-star" th:if="${averageRating >= 1}"></i>
+                        <i class="fa fa-star" th:if="${averageRating >= 2}"></i>
+                        <i class="fa fa-star" th:if="${averageRating >= 3}"></i>
+                        <i class="fa fa-star" th:if="${averageRating >= 4}"></i>
+                        <i class="fa fa-star" th:if="${averageRating >= 5}"></i>
+                    </span>
+                </div>
+                <div class="price-section">
+                    <!-- Kiểm tra nếu có discount thì hiển thị giá giảm và giá gốc -->
+                    <span class="price-discount text-danger fw-bold" th:if="${product.discount != null}"
+                        th:text="${#numbers.formatDecimal(product.price - product.price * product.discount.discountPercent / 100, 0, 0)}">
+                    </span>
+                    <span class="price-original ms-2 text-muted" th:if="${product.discount != null}">
+                        <del th:text="${#numbers.formatDecimal(product.price, 0, 0)}"></del>
+                    </span>
+                    <span class="badge bg-danger ms-2" th:if="${product.discount != null}"
+                        th:text="'-' + ${#numbers.formatDecimal(product.discount.discountPercent, 0, 0)} + '%'">
+                    </span>
+
+                    <!-- Hiển thị giá gốc nếu không có discount -->
+                    <span class="price-product fw-bold" th:if="${product.discount == null}"
+                        th:text="${#numbers.formatDecimal(product.price, 0, 0)}">
+                    </span>
+                </div>
+                <hr>
+                <div class="mt-3">
+                    <h5>Màu sắc: </h5>
+                    <div class="product-color">
+                        <th:block th:each="variant : ${productVariants}">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="colorOptions"
+                                    th:id="'color-' + ${variant.color.colorId}" th:value="${variant.color.colorName}">
+                                <label class="form-check-label" th:for="'color-' + ${variant.color.colorId}"
+                                    th:text="${variant.color.colorName}"></label>
+                            </div>
+                        </th:block>
+                    </div>
+                </div>
+                <hr>
+                <div class="mt-3">
+                    <h5>Kích thước: </h5>
+                    <div class="product-size">
+                        <th:block th:each="variant : ${productVariants}">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="sizeOptions"
+                                    th:id="'size-' + ${variant.size.sizeId}" th:value="${variant.size.sizeName}">
+                                <label class="form-check-label" th:for="'size-' + ${variant.size.sizeId}"
+                                    th:text="${variant.size.sizeName}"></label>
+                            </div>
+                        </th:block>
+                    </div>
+                </div>
+                <hr>
+                <div class="mt-3">
+                    <span class="me-3">SỐ LƯỢNG: </span>
+                    <input type="number" style="width: 50%;" min="1" max="5">
+                </div>
+                <div class="mt-4 p-3 d-flex justify-content-between align-items-center text-center border">
+                    <a href="/yourstyle/cartdetail">
+                        <button class="add-to-cart-btn">THÊM VÀO GIỎ HÀNG</button>
+                    </a>
+                    <a href="/productfavorites">
+                        <i class="fa-regular fa-heart fs-3 fs-dark"></i>
+                    </a>
+                </div>
+                <div class="py-4 text-center">
+                    <p>96% Khách hàng cho rằng nó đúng với kích thước</p>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Hưỡng dẫ xem kích thước
+                    </button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Xem kích thước</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <img src="/site/images/size/size-table.png" alt="" class="img-fluid">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Thoát</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="pt-3">
+                    <h4>Mô Tả sản phẩm</h4><br>
+                    <p>THÔNG TIN SẢN PHẨM: <span th:text="${product.description}"></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="row pt-5">
+            <h2 class="text-center">SẢN PHẨM TƯƠNG TỰ</h2>
+            <div th:each="p : ${similarProducts}" class="col-md-3 pt-5" data-aos="fade-up">
+                <div class="card product-card">
+                    <a th:href="@{/allproduct}">
+                        <img th:src="@{/site/images/product/product-2.webp}" class="img-fluid">
+                    </a>
+                    <div class="p-2">
+                        <h5 class="product-name" th:text="${p.name}"></h5>
+                        <div class="price-container d-flex align-items-center">
+                            <!-- Nếu có giảm giá, hiển thị giá đã giảm và giá gốc -->
+                            <div th:if="${p.discount != null}" class="d-flex align-items-center">
+                                <p class="price-discount text-danger fw-bold mb-0 me-2"
+                                    th:text="${#numbers.formatDecimal(p.price - p.price * p.discount.discountPercent / 100, 0, 0)} + 'đ'">
+                                </p>
+                                <p class="price-original text-muted mb-0">
+                                    <del th:text="${#numbers.formatDecimal(p.price, 0, 0)} + 'đ'"></del>
+                                </p>
+                                <span class="discount-badge badge bg-danger ms-2">
+                                    -[[${#numbers.formatDecimal(p.discount.discountPercent, 0, 0)}]]%
+                                </span>
+                            </div>
+                            <!-- Nếu không có giảm giá, chỉ hiển thị giá gốc -->
+                            <div th:if="${p.discount == null}">
+                                <p class="price-similar-product text-danger fw-bold mb-0"
+                                    th:text="${#numbers.formatDecimal(p.price, 0, 0)} + 'đ'"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function formatCurrency(amount) {
+                // Đảm bảo giá trị là số và định dạng theo kiểu có dấu chấm phân cách hàng nghìn
+                return parseInt(amount).toLocaleString('vi-VN') + 'đ';
+            }
+
+            // Định dạng giá trị của các phần tử có class "price-discount" và "price-original"
+            document.addEventListener("DOMContentLoaded", function () {
+                document.querySelectorAll('.price-discount, .price-original, .price-similar-product, .price-product').forEach(function (element) {
+                    if (element.textContent.trim() !== "") {
+                        element.textContent = formatCurrency(element.textContent);
+                    }
+                });
+            });
+        </script>
+
+
+    </section>
+
+</body>
+
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{site/index.html}">
+<head>
+<title>Đăng Ký</title>
+</head>
+
+<body>
+	<section class="py-5 container" layout:fragment="main">
+		<section class="register">
+			<div class="register-container row mx-auto">
+				<div class="register-form">
+					<h1>Đăng Ký</h1>
+					<form th:action="@{/yourstyle/accounts/register}"
+						th:object="${account}" method="post">
+						<div th:if="${errorMessage}" class="alert alert-danger"
+							role="alert">
+							<p th:text="${errorMessage}"></p>
+						</div>
+						<div class="input-container input-icon">
+							<input type="text" class="form-control" placeholder="Họ và Tên"
+								th:field="*{username}" /> <i class="bi bi-person-fill"></i>
+						</div>
+						<div class="input-container input-icon">
+							<input type="email" class="form-control" placeholder="Email"
+								th:field="*{email}" /> <i class="bi bi-envelope"></i>
+						</div>
+						<div class="input-container input-icon">
+							<input type="password" class="form-control"
+								placeholder="Mật khẩu" th:field="*{password}" /> <i
+								class="bi bi-lock-fill"></i>
+						</div>
+						<div class="input-container input-icon">
+							<input type="password" class="form-control"
+								placeholder="Nhập lại mật khẩu" name="confirmPassword" /> <i
+								class="bi bi-lock-fill"></i>
+						</div>
+						<button type="submit" class="btn btn-custom w-100">Đăng
+							Ký</button>
+					</form>
+				</div>
+                <div class="login-info">
+                    <h2>Welcome Back!</h2>
+                    <p style="text-align: center;">Nếu bạn đã có tài khoản, hãy đăng nhập để tiếp tục sử dụng dịch vụ
+                        của chúng tôi.</p>
+                    <a th:href="@{/yourstyle/accounts/login}">
+                        <button class="btn btn-light">Đăng Nhập</button>
+                    </a>
+
+                </div>
+			</div>
+		</section>
+	</section>
+
+	
+</body>
+</html>
