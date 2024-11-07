@@ -7,9 +7,7 @@
 </head>
 
 <body>
-	<div id="messageArea"></div>
-
-	<!--===== main =======-->
+	<!-- <div id="messageArea"></div> -->
 	<section class="py-5 container" layout:fragment="main">
 		<section class="">
 			<div class="row">
@@ -18,7 +16,7 @@
 						class="img-fluid" alt="">
 					</a>
 				</div>
-				<!-- ===================================================================================== -->
+				<!-- thành -->
 				<div class="col-md-6">
 					<div id="carouselExampleIndicators" class="carousel slide"
 						data-bs-ride="carousel">
@@ -45,18 +43,23 @@
 									class="d-block w-100" alt="Slide 3">
 							</div>
 						</div>
-						<button class="carousel-control-prev" type="button"
-							data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-							<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-							<span class="visually-hidden">Previous</span>
-						</button>
-						<button class="carousel-control-next" type="button"
-							data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-							<span class="carousel-control-next-icon" aria-hidden="true"></span>
-							<span class="visually-hidden">Next</span>
-						</button>
+
+						<!-- Nút thêm, sửa, xóa slide chỉ hiển thị với Admin và Employee -->
+						<div class="carousel-controls">
+							<a href="/admin/slide/add" class="btn btn-success"> <i
+								class="bi bi-plus-circle"></i>
+							</a> <a href="/yourstyle/admin/slide/edit"
+								class="btn btn-warning mx-2"> <i class="bi bi-pencil-square"></i>
+							</a> <a href="/yourstyle/admin/slide/delete" class="btn btn-danger">
+								<i class="bi bi-trash"></i>
+							</a>
+						</div>
+
 					</div>
 				</div>
+
+
+
 				<!-- ============================================================================================================================ -->
 				<div class="col-md-3"
 					style="background: linear-gradient(0, rgb(255, 255, 255), rgb(255, 219, 218));">
@@ -369,32 +372,6 @@
 				</div>
 			</div>
 		</section>
-		<script>
-			function addToFavorite(productId) {
-				if (productId != null) {
-					window.location.href = `/yourstyle/productfavorites/add?productId=${productId}`;
-
-				}
-			}
-			$(document).ready(function() {
-				$('#addFavoriteBtn').click(function() {
-					var productId = $(this).data('product-id');
-
-					$.ajax({
-						url : '/add', // Đường dẫn tới phương thức addFavorite
-						type : 'GET',
-						data : {
-							productId : productId
-						},
-						success : function(response) {
-							$('#messageArea').text(response);
-						},
-						error : function(xhr) {
-							$('#messageArea').text(xhr.responseText);
-						}
-					});
-				});
-			});
-		</script>
+	</section>
 </body>
 </html>
