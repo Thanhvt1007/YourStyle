@@ -27,6 +27,9 @@ public class SecurityConfig {
                         .requestMatchers("/yourstyle/accounts/**").permitAll()
                         .requestMatchers("/yourstyle/product/**").permitAll()
                         // .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                        //Thành
+//                        .requestMatchers("/yourstyle/admin/slide/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_EMPLOYEE")  // Cả Admin và Employee đều có quyền truy cập
+                        //-------------------------
                         .requestMatchers("/yourstyle/carts/**", "/yourstyle/VNPays/**")
                         .hasAnyAuthority("ROLE_ADMIN", "ROLE_USER", "ROLE_EMPLOYEE")
                         .anyRequest().authenticated())

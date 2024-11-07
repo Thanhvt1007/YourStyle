@@ -28,16 +28,18 @@ public class ReviewAdminController {
 	}
 
 	// Xóa một đánh giá
-	@DeleteMapping("/{reviewId}")
-	public ResponseEntity<String> deleteReview(@PathVariable Integer reviewId) {
-		System.out.println(reviewId);
-		boolean isDeleted = reviewService.deleteReview(reviewId);
-		if (isDeleted) {
-			return ResponseEntity.ok("Review deleted successfully.");
-		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Review not found.");
-		}
+	// Lấy thông tin đánh giá (dùng GET để thử nghiệm)
+	@GetMapping("/delete/{reviewId}")
+	public ResponseEntity<String> getReview(@PathVariable Integer reviewId) {
+	    System.out.println("Review ID được nhận: " + reviewId);
+	    boolean isDeleted = reviewService.deleteReview(reviewId);
+	    if (isDeleted) {
+	        return ResponseEntity.ok("Review đã được xóa thành công.");
+	    } else {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy review.");
+	    }
 	}
+
 
 	// Trả lời đánh giá
 	@PostMapping("/{id}/reply")
